@@ -4,7 +4,10 @@ const router = express.Router();
 const notesData = require('../db/db.json');
 const uuid = require('../helpers/uuid');
 
-router.get('/', (req, res) => res.json(notesData));
+router.get('/', (req, res) => {
+  console.info(`${req.method} request has been received.`);
+  res.json(notesData)
+});
 
 router.post('/', (req, res) => {
   console.info(`${req.method} request received to add a new note`);
