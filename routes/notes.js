@@ -6,7 +6,9 @@ const uuid = require('../helpers/uuid');
 
 router.get("/", (req, res) =>{
   console.log(`${req.method} request has been received.`);
-  readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
+  readFromFile('./db/db.json')
+    .then((data) => res.json(JSON.parse(data)))
+    .catch((err) => console.log("Error:", err));
 });
 
 router.post('/', (req, res) => {
@@ -27,6 +29,18 @@ router.post('/', (req, res) => {
     res.error('Error in adding note.');
   }
 });
+
+router.delete('/:id', (req, res) => {
+  console.log(`${req.method} request has been received.`);
+  readFromFile('./db/db.json')
+    .then((data) => {
+      const notes = JSON.parse(data);
+      const filteredNotes = notes.filter(note => note.id !== req.params.id)
+      res.json(filteredNotes);
+      writeToFile("./db/db.json", filteredNotes);
+    })
+    .catch((err) => console.log("Error:", err));
+})
 
 const readFromFile = util.promisify(fs.readFile);
 
