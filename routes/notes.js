@@ -1,12 +1,18 @@
 const express = require("express");
 const fs = require('fs');
 const router = express.Router();
-const notesData = require('../db/db.json');
 const uuid = require('../helpers/uuid');
 
-router.get('/', (req, res) => {
-  console.info(`${req.method} request has been received.`);
-  res.json(notesData)
+router.get("/", (req, res) =>{
+  console.log(`${req.method} request has been received.`);
+
+  fs.readFile("./db/db.json", "utf8", (err, data) => {
+      if(err){
+          console.error(err);
+          res.status(404).send("Error: notes not found").end();
+      }
+      res.json(JSON.parse(data));
+  })
 });
 
 router.post('/', (req, res) => {
