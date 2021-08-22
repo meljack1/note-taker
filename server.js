@@ -8,7 +8,7 @@ const app = express();
 // Middleware - accept json and url encoded data, and take static assets from ./public
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("./public"));
+app.use(express.static("public"));
 
 app.use("/api/notes", apiRoutes)
 
