@@ -1,18 +1,12 @@
 const express = require("express");
 const fs = require('fs');
 const router = express.Router();
+const util = require('util');
 const uuid = require('../helpers/uuid');
 
 router.get("/", (req, res) =>{
   console.log(`${req.method} request has been received.`);
-
-  fs.readFile("./db/db.json", "utf8", (err, data) => {
-      if(err){
-          console.error(err);
-          res.status(404).send("Error: notes not found").end();
-      }
-      res.json(JSON.parse(data));
-  })
+  readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
 });
 
 router.post('/', (req, res) => {
@@ -33,6 +27,8 @@ router.post('/', (req, res) => {
     res.error('Error in adding note.');
   }
 });
+
+const readFromFile = util.promisify(fs.readFile);
 
 const writeToFile = (destination, content) =>
  fs.writeFile(destination, JSON.stringify(content, null, 4), (err) =>
